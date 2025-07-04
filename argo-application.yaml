@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/impreza517/k8stest.git   # 替換成你的 GitHub repo
+    targetRevision: main  # 或指定 tag/branch，例如 "main"
+    path: app             # 指向 repo 中含有 YAML 的目錄
+  destination:
+    server: https://kubernetes.default.svc  # 部署到本 cluster
+    namespace: default                      # 要部署到的 namespace
+  syncPolicy:
+    automated:
+      prune: true         # 刪除 cluster 中多餘資源
+      selfHeal: true      # 自動修復 drift（偏移）
+    syncOptions:
+    - CreateNamespace=true
+
